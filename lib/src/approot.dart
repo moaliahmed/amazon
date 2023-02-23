@@ -1,7 +1,10 @@
 import 'package:amazon/bloc/AllItem/all_item_cubit.dart';
+import 'package:amazon/bloc/Item_CAtegories/item_categories_cubit.dart';
+import 'package:amazon/bloc/add_cart/add_car_cubit.dart';
 import 'package:amazon/bloc/bloc_login/cubit/login_cubit.dart';
 import 'package:amazon/bloc/bloc_signup/cubit/sign_up_cubit.dart';
 import 'package:amazon/bloc/get_categories/get_categories_cubit.dart';
+import 'package:amazon/screens/Categoies.dart';
 import 'package:amazon/screens/home_screen.dart';
 import 'package:amazon/screens/login_screan.dart';
 import 'package:amazon/screens/onBordingScrean.dart';
@@ -36,6 +39,15 @@ class AppRoot extends StatelessWidget {
             ,
             BlocProvider(
               create: (context) => AllItemCubit(),
+              child: Container(),
+            ),
+            BlocProvider(
+              create: (context) => ItemCategoriesCubit(),
+              child: Container(),
+            
+            ),
+            BlocProvider(
+              create: (context) => AddCartCubit(),
               child: Container(),
             )
           ],

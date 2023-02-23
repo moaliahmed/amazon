@@ -13,7 +13,9 @@ class SignUpScrean extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: BlocConsumer<SignUpCubit,SignUpState>(
-          listener: (context, state) {},
+          listener: (context, state) {
+            
+          },
           builder: (context, state) {
             var cubit= SignUpCubit.get(context);
             return SingleChildScrollView(

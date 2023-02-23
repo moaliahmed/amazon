@@ -16,36 +16,22 @@ class GetCategoriesCubit extends Cubit<GetCategoriesState> {
 
   static GetCategoriesCubit get(context) => BlocProvider.of(context);
   CategoriesModel? categoriesModel;
-  AllItemModel? allItemModel;
+
+
+  
   getCategories() {
     emit(GetCategoriesLoding());
-    DioHelper.getData(url: 'categories',token: SharedPreferencesHelper.getData(key: SPkeys.token))
-    .then((value) {
+    DioHelper.getData(
+            url: 'categories',
+            query: {'category':2},
+            token: SharedPreferencesHelper.getData(key: SPkeys.token))
+        .then((value) {
       emit(GetCategoriesSuccess());
       print('categories Suc');
-      categoriesModel=CategoriesModel.fromJson(value.data);
-    })
-    .catchError((e) {
+      categoriesModel = CategoriesModel.fromJson(value.data);
+    }).catchError((e) {
       print('Error categories $e');
       emit(GetCategoriesError());
     });
   }
-
-getAllItem() {
-    emit(GetCategoriesLoding());
-    DioHelper.getData(
-            url: 'products',
-            token: SharedPreferencesHelper.getData(key: SPkeys.token))
-        .then((value) {
-          emit(GetCategoriesSuccess());
-          allItemModel=AllItemModel.fromJson(value.data);
-          print('allItem Suc');
-        })
-        .catchError((e) {
-          print('AllItem Erro $e');
-          emit(GetCategoriesError());
-        });
-  }
-
-  
 }

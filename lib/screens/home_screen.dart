@@ -1,6 +1,14 @@
 import 'package:amazon/bloc/AllItem/all_item_cubit.dart';
 import 'package:amazon/bloc/get_categories/get_categories_cubit.dart';
+import 'package:amazon/component/categories_card.dart';
+import 'package:amazon/component/item_Card.dart';
 import 'package:amazon/models/getCategories.dart';
+import 'package:amazon/screens/Item_Categoies.dart';
+import 'package:amazon/screens/cart_screan.dart';
+import 'package:amazon/screens/contact_screan.dart';
+import 'package:amazon/screens/Categoies.dart';
+import 'package:amazon/screens/single_item_screan.dart';
+import 'package:amazon/src/navigation_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -21,199 +29,182 @@ class _HomeScreanState extends State<HomeScrean> {
   @override
   void initState() {
     super.initState();
+    AllItemCubit.get(context).getAllItem();
     GetCategoriesCubit.get(context).getCategories();
-    GetCategoriesCubit.get(context).getAllItem();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      body: BlocConsumer<GetCategoriesCubit, GetCategoriesState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          var cubit = GetCategoriesCubit.get(context);
-         
-          return cubit.categoriesModel == null
-              ? Center(child: CircularProgressIndicator())
-              : Column(
-                  children: [
-                    SizedBox(
-                      height: 22,
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.menu,
-                            color: Colors.black,
-                            size: 34.r,
+      body: SingleChildScrollView(
+        child: BlocConsumer<GetCategoriesCubit, GetCategoriesState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            var cubit = GetCategoriesCubit.get(context);
+
+            return cubit.categoriesModel == null
+                ? Center(child: CircularProgressIndicator())
+                : Column(
+                    children: [
+                      SizedBox(
+                        height: 22,
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.menu,
+                              color: Colors.black,
+                              size: 34.r,
+                            ),
+                            onPressed: () {
+                              scaffoldKey.currentState!.openDrawer();
+                            },
                           ),
-                          onPressed: () {
-                            scaffoldKey.currentState!.openDrawer();
-                          },
-                        ),
-                        Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          width: 290.w,
-                          height: 50.h,
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              suffixIcon: Icon(Icons.search_rounded),
-                              border: OutlineInputBorder(),
-                              labelText: ' Search',
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            width: 290.w,
+                            height: 50.h,
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                suffixIcon: Icon(Icons.search_rounded),
+                                border: OutlineInputBorder(),
+                                labelText: ' Search',
+                              ),
                             ),
                           ),
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () => AppNavigator.appNavigator(
+                            context, true, CategoriesScrean()),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 12.w,
+                            ),
+                            Text(
+                              'Categories',
+                              style:
+                                  TextStyle(fontSize: 22, color: Colors.blue),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 12.w,
-                        ),
-                        Text(
-                          'Categories',
-                          style: TextStyle(fontSize: 22, color: Colors.blue),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: SizedBox(
-                        height: 160.0,
-                        child: ListView.builder(
-                          physics: ClampingScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: cubit.categoriesModel?.data?.length,
-                          itemBuilder: (BuildContext context, int index) =>
-                              Card(
-                            elevation: 6,
-                            child: Container(
-                              decoration:
-                                  BoxDecoration(color: Colors.grey[400]),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    width: 110.w,
-                                    child: Image.network(
-                                        'https://www.freepnglogos.com/uploads/mobile-png/samsung-mobile-png-14.png'),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 34),
-                                    child: Text(
-                                      '${cubit.categoriesModel?.data![index].name}',
-                                      style: TextStyle(fontSize: 22),
-                                    ),
-                                  ),
-                                ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: SizedBox(
+                          height: 160.0,
+                          child: ListView.builder(
+                            physics: ClampingScrollPhysics(),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 9,
+                            itemBuilder: (BuildContext context, int index) =>
+                                GestureDetector(
+                              onTap: () => AppNavigator.appNavigator(
+                                context,
+                                false,
+                                ItemCategoriesScrean(
+                                  number: index + 1,
+                                ),
                               ),
+                              child: CategoriesCard(
+                                  color: Colors.grey[350],
+                                  name:
+                                      '${cubit.categoriesModel?.data![index].name}'),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 12.w,
-                        ),
-                        Text(
-                          'Best Seller',
-                          style: TextStyle(fontSize: 22, color: Colors.blue),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 200.0,
-                      child: ListView.builder(
-                          physics: ClampingScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 5,
-                          itemBuilder: (BuildContext context, int index) =>
-                              Card(
-                                elevation: 6,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: 100.w,
-                                      child: Image.network(
-                                          'https://images.rawpixel.com/image_png_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvcm0zNTUtcGYtczczLWNhcmQtbGFwdG9wLTAxLnBuZw.png?s=VEee2Vek6oq9ytBRkAMIQFlxPIzh7cmwdKRCowpcDSE'),
-                                    ),
-                                    Text('Lenevo V15 Laptop'),
-                                    Text('2500'),
-                                    Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Button(
-                                        name: 'Add Cart',
-                                        function: () {},
-                                        Width: 120,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )),
-                    ),
-                    SizedBox(height: 8,), 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 12.w,
-                        ),
-                        Text(
-                          'All Item',
-                          style: TextStyle(fontSize: 22, color: Colors.blue),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 200.0,
-                      child: ListView.builder(
-                          physics: ClampingScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount:cubit.allItemModel?.data?.length ,
-                          itemBuilder: (BuildContext context, int index) =>
-                              Card(
-                                elevation: 6,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: 100.w,
-                                      child: Image.network(
-                                          'https://www.freepnglogos.com/uploads/mobile-png/samsung-mobile-png-14.png'),
-                                    ),
-                                    Text('${cubit.allItemModel?.data?[index].categoryName}'),
-                                    Text('${cubit.allItemModel?.data?[index].price}'),
-                                    Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Button(
-                                        name: 'Add Cart',
-                                        function: () {},
-                                        Width: 120,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )),
-                    ),
-                  ],
-                );
-        },
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 12.w,
+                          ),
+                          Text(
+                            'Best Seller',
+                            style: TextStyle(fontSize: 22, color: Colors.blue),
+                          ),
+                        ],
+                      ),
+                      BlocConsumer<AllItemCubit, AllItemState>(
+                        listener: (context, state) {
+                          // TODO: implement listener
+                        },
+                        builder: (context, state) {
+                          var cubit1 = AllItemCubit.get(context);
+                          return SizedBox(
+                            height: 220.0,
+                            child: ListView.builder(
+                              physics: ClampingScrollPhysics(),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 7,
+                              itemBuilder: (BuildContext context, int index) =>
+                                  ItemCard(
+                                      name:
+                                          '${cubit1.allItemModel?.data?[index].name}',
+                                      price:
+                                          '${cubit1.allItemModel?.data?[index].price}',
+                                          id: '${cubit1.allItemModel?.data?[index].id}',
+                                          ),
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 12.w,
+                          ),
+                          Text(
+                            'All Item',
+                            style: TextStyle(fontSize: 22, color: Colors.blue),
+                          ),
+                        ],
+                      ),
+                      BlocConsumer<AllItemCubit, AllItemState>(
+                        listener: (context, state) {
+                          
+                        },
+                        builder: (context, state) {
+                          var cubit1 = AllItemCubit.get(context);
+                          return SizedBox(
+                            height: 220.0,
+                            child: ListView.builder(
+                              physics: ClampingScrollPhysics(),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: cubit1.allItemModel?.data?.length,
+                              itemBuilder: (BuildContext context, int index) =>
+                                  ItemCard(
+                                      name:
+                                          '${cubit1.allItemModel?.data?[index].name}',
+                                      price:
+                                          '${cubit1.allItemModel?.data?[index].price}',
+                                          id: '${cubit1.allItemModel?.data?[index].id}',
+                                          
+                                          ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  );
+          },
+        ),
       ),
       drawer: Drawer(
         elevation: 10.0,
@@ -262,7 +253,7 @@ class _HomeScreanState extends State<HomeScrean> {
               title: Row(
                 children: [Icon(Icons.shopping_cart_outlined), Text('Cart')],
               ),
-              onTap: () {},
+              onTap: () {AppNavigator.appNavigator(context, false, CartScrean());},
             ),
             Divider(
               thickness: 1,
@@ -296,7 +287,9 @@ class _HomeScreanState extends State<HomeScrean> {
             ListTile(
               title: Row(
                   children: [Icon(Icons.phone_outlined), Text('Content us')]),
-              onTap: () {},
+              onTap: () {
+                AppNavigator.appNavigator(context, true, ContactScrean());
+              },
             ),
             Divider(
               thickness: 1,
@@ -318,6 +311,9 @@ class _HomeScreanState extends State<HomeScrean> {
             ListTile(
               title:
                   Row(children: [Icon(Icons.apps_sharp), Text('Categories')]),
+              onTap: () {
+                AppNavigator.appNavigator(context, true, CategoriesScrean());
+              },
             ),
             Divider(
               thickness: 1,

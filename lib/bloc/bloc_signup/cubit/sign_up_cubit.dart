@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
@@ -6,6 +9,7 @@ import 'package:meta/meta.dart';
 import '../../../models/SignUp.dart';
 import 'package:amazon/services/SP/sp_helper.dart';
 
+import '../../../models/error_signUp.dart';
 import '../../../services/dio_helper.dart';
 
 part 'sign_up_state.dart';
@@ -13,6 +17,7 @@ part 'sign_up_state.dart';
 class SignUpCubit extends Cubit<SignUpState> {
   SignUpCubit() : super(SignUpInitial());
   static SignUpCubit get(context) => BlocProvider.of(context);
+  ErrorSignUp? errorSignUp; 
   SignUp? signUp;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -38,9 +43,12 @@ class SignUpCubit extends Cubit<SignUpState> {
           },
         )
         .catchError(
-          (e) {
-            emit(SignUpError());
-            print(e);
+          ( error) {
+           // emit(SignUpError());
+            print(error.response);
+
+          //  errorSignUp=ErrorSignUp.fromJson(error.response);
+          //    print(errorSignUp);
           },
         );
   }

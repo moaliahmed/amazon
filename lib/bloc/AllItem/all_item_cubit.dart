@@ -3,12 +3,14 @@ import 'package:amazon/services/SP/sp_helper.dart';
 import 'package:amazon/services/SP/sp_key.dart';
 import 'package:amazon/services/dio_helper.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
 part 'all_item_state.dart';
 
 class AllItemCubit extends Cubit<AllItemState> {
   AllItemCubit() : super(AllItemInitial());
+  static AllItemCubit get (context)=> BlocProvider.of(context);
   AllItemModel? allItemModel;
 
   getAllItem() {
